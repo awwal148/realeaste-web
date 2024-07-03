@@ -1,10 +1,13 @@
 "use client"
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import houseKeys from '../assets/images/house-Keys.jpg'
 import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai'
 import { OAuth } from '../components/OAuth'
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
  import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -12,10 +15,10 @@ import { OAuth } from '../components/OAuth'
 } from "firebase/auth";
 import { db } from "../config/firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -48,6 +51,7 @@ const SignUp = () => {
       formDataCopy.timestamp = serverTimestamp();
 
       await setDoc(doc(db, "users", user.uid), formDataCopy);
+      router.push("/")
       // toast.success("Sign up was successful");
       // navigate("/");
     } catch (error) {
@@ -138,6 +142,18 @@ const SignUp = () => {
           </form>
         </div>
       </div>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </section>
   )
 }
