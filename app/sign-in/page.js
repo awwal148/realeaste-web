@@ -2,12 +2,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation';
 import houseKeys from '../assets/images/house-Keys.jpg'
 import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai'
 import { OAuth } from '../components/OAuth'
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,6 +23,22 @@ const SignIn = () => {
       ...prevState,
       [e.target.id]: e.target.value,
     }));
+  }
+  async function onSubmit(e) {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      if (userCredential.user) {
+        router.push("/");
+      }
+    } catch (error) {
+      toast.error("Bad user credentials");
+    }
   }
   return (
      <section>
@@ -35,7 +55,7 @@ const SignIn = () => {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form >
+            <form onSubmit={onSubmit}>
             <input
               type="email"
               id="email"

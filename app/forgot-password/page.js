@@ -1,16 +1,27 @@
 "use client"
 import Image from 'next/image'
 import React, { useState } from 'react'
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import houseKeys from '../assets/images/house-Keys.jpg'
-import { OAuth } from '../components/OAuth'
 
 const SignUp = () => {
-  const [formData, setFormData] = useState();
+   const [email, setEmail] = useState("");
+
   function onChange(e) {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.id]: e.target.value,
-    }));
+    setEmail(e.target.value);
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    try {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email);
+      console.log("success")
+      // toast.success("Email was sent");
+    } catch (error) {
+      console.log(error)
+      // toast.error("Could not send reset password");
+    }
   }
   return (
      <section>
@@ -27,7 +38,7 @@ const SignUp = () => {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form >
+          <form onSubmit={onSubmit} >
             <input
               type="email"
               id="email"
