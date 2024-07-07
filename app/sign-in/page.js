@@ -17,6 +17,7 @@ const SignIn = () => {
     password: "",
   });
   const { email, password } = formData;
+  // const { setUserCredential } = useContext(AuthContext);
   // const navigate = useNavigate();
   function onChange(e) {
     setFormData((prevState) => ({
