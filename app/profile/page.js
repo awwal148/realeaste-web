@@ -1,6 +1,8 @@
 'use client'
 import { getAuth, updateProfile } from "firebase/auth";
 import { useContext } from "react";
+import { useEffect } from "react";
+import { useAuthStatus } from "../context/useAuthStatus";
 import { AuthContext } from "../context/AuthContext";
 // import {
 //   collection,
@@ -17,10 +19,8 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { db } from "../config/firebase";
 import { FcHome } from "react-icons/fc";
-import { useEffect } from "react";
 import ListingItem from "../components/ListingItem";
 import { useRouter } from "next/navigation";
-import { useAuthStatus } from "../context/useAuthStatus";
 
  const Profile = () => {
   const auth = getAuth();
@@ -28,12 +28,10 @@ import { useAuthStatus } from "../context/useAuthStatus";
   const router = useRouter()
    const {loggedIn, checkingStatus} = useAuthStatus()
   useEffect(() => {
-    // Redirect to sign-up page if user is not authenticated
-    if (!userCredential || !loggedIn) {
-     return router.push('/sign-in');
-      // console.log(user)
+    if (!checkingStatus && (!userCredential || !loggedIn)) {
+      router.push('/sign-in');
     }
-  }, [userCredential,loggedIn, router]);
+  }, [userCredential, loggedIn, checkingStatus, router]);
   const [changeDetail, setChangeDetail] = useState(false);
    const [formData, setFormData] = useState({
     name: '',
@@ -53,7 +51,6 @@ import { useAuthStatus } from "../context/useAuthStatus";
   function onLogout() {
     auth.signOut();
     router.push('/')
-    // navigate("/");
   }
   function onChange(e) {
     setFormData((prevState) => ({

@@ -1,12 +1,18 @@
 "use client"; 
 import React from 'react';
-import { navLinks } from '../constant';
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import {createNavLinks } from '../constant';
 import Link from 'next/link';
+import { useAuthStatus } from '../context/useAuthStatus';
 import { useRouter, usePathname } from 'next/navigation'; 
 
 export const Header = () => {
+  const { loggedIn } = useAuthStatus();
   const pathname = usePathname(); // Get the current pathname
   const router = useRouter(); // Get the router object
+
+  const navLinks = createNavLinks(loggedIn);
   function pathMatchRoute(route) {
     return route === pathname; // Directly return the comparison result
   }
