@@ -4,23 +4,24 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import { useAuthStatus } from "../context/useAuthStatus";
 import { AuthContext } from "../context/AuthContext";
-// import {
-//   collection,
-//   deleteDoc,
-//   doc,
-//   getDocs,
-//   orderBy,
-//   query,
-//   updateDoc,
-//   where,
-// } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useState } from "react";
 import Link from "next/link";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { db } from "../config/firebase";
 import { FcHome } from "react-icons/fc";
-import ListingItem from "../components/ListingItem";
+// import ListingItem from "../components/ListingItem";
 import { useRouter } from "next/navigation";
+import ListingItem from "../components/ListingItem";
 
  const Profile = () => {
   const auth = getAuth();
@@ -37,8 +38,10 @@ import { useRouter } from "next/navigation";
     name: '',
     email: '',
   });
-  // const [listings, setListings] = useState(null);
-  // const [loading, setLoading] = useState(true);
+  //note
+  const [listings, setListings] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // 
    useEffect(() => {
     if (userCredential) {
       setFormData({
@@ -78,40 +81,42 @@ import { useRouter } from "next/navigation";
       // toast.error("Could not update the profile details");
     }
   }
-  // useEffect(() => {
-  //   async function fetchUserListings() {
-  //     const listingRef = collection(db, "listings");
-  //     const q = query(
-  //       listingRef,
-  //       where("userRef", "==", auth.currentUser?.uid),
-  //       orderBy("timestamp", "desc")
-  //     );
-  //     const querySnap = await getDocs(q);
-  //     let listings = [];
-  //     querySnap.forEach((doc) => {
-  //       return listings.push({
-  //         id: doc.id,
-  //         data: doc.data(),
-  //       });
-  //     });
-  //     setListings(listings);
-  //     setLoading(false);
-  //   }
-  //   fetchUserListings();
-  // }, [auth.currentUser?.uid]);
-  // async function onDelete(listingID) {
-  //   if (window.confirm("Are you sure you want to delete?")) {
-  //     await deleteDoc(doc(db, "listings", listingID));
-  //     const updatedListings = listings.filter(
-  //       (listing) => listing.id !== listingID
-  //     );
-  //     setListings(updatedListings);
-  //     toast.success("Successfully deleted the listing");
-  //   }
-  // }
-  // function onEdit(listingID) {
-  //   navigate(`/edit-listing/${listingID}`);
-  // }
+  //note
+  useEffect(() => {
+    async function fetchUserListings() {
+      const listingRef = collection(db, "listings");
+      const q = query(
+        listingRef,
+        where("userRef", "==", auth.currentUser?.uid),
+        orderBy("timestamp", "desc")
+      );
+      const querySnap = await getDocs(q);
+      let listings = [];
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+      setListings(listings);
+      setLoading(false);
+    }
+    fetchUserListings();
+  }, [auth.currentUser?.uid]);
+  async function onDelete(listingID) {
+    if (window.confirm("Are you sure you want to delete?")) {
+      await deleteDoc(doc(db, "listings", listingID));
+      const updatedListings = listings.filter(
+        (listing) => listing.id !== listingID
+      );
+      setListings(updatedListings);
+      // toast.success("Successfully deleted the listing");
+    }
+  }
+  function onEdit(listingID) {
+    router.push(`/edit-listing/${listingID}`);
+  }
+  //end{code}
   return (
     <>
       <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
@@ -176,7 +181,7 @@ import { useRouter } from "next/navigation";
           </button>
         </div>
       </section>
-      {/* <div className="max-w-6xl px-3 mt-6 mx-auto">
+      <div className="max-w-6xl px-3 mt-6 mx-auto">
         {!loading && listings.length > 0 && (
           <>
             <h2 className="text-2xl text-center font-semibold mb-6">
@@ -184,6 +189,10 @@ import { useRouter } from "next/navigation";
             </h2>
             <ul className="sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {listings.map((listing) => (
+                <>
+                <li key={listing.id} className="mb-6">
+                 
+                </li>
                 <ListingItem
                   key={listing.id}
                   id={listing.id}
@@ -191,11 +200,12 @@ import { useRouter } from "next/navigation";
                   onDelete={() => onDelete(listing.id)}
                   onEdit={() => onEdit(listing.id)}
                 />
+                </>
               ))}
             </ul>
           </>
         )}
-      </div> */}
+      </div> 
     </>
   );
 }
