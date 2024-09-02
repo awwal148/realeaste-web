@@ -264,7 +264,7 @@ const Page = () => {
     </div>
     <p className="text-3xl font-bold mt-4 text-[#121212]">Rent A Home</p>
     <p className="mt-2 text-gray-700">
-      With over 1 million+ homes for sale available on the website, BuildGrain can match you with a house you will want to call home.
+      With over 1 million+ rental listings available on our website, BuildGrain can help you find the perfect house to rent.
     </p>
     <button className="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-150">
       <Link href="/category/rent">
@@ -278,7 +278,7 @@ const Page = () => {
     </div>
     <p className="text-3xl font-bold mt-4 text-[#121212]">Sell A Home</p>
     <p className="mt-2 text-gray-700">
-      With over 1 million+ homes for sale available on the website, BuildGrain can match you with a house you will want to call home.
+      With over 1 million+ potential buyers visiting our website, BuildGrain can help you sell your house quickly and efficiently. 
     </p>
     <button className="mt-4 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-150">
       <Link href="/profile">
