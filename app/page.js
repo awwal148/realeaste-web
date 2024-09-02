@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { BsChevronCompactLeft, BsChevronCompactRight } from 'react-icons/bs';
 import { RxDotFilled } from 'react-icons/rx';
 import { CiSearch } from "react-icons/ci";
@@ -7,6 +7,7 @@ import { slides } from './constant';
 import Buy from './assets/iconss/BuyAHome.svg'
 import Rent from './assets/iconss/RentAHome.svg'
 import Sell from './assets/iconss/Neighborhoods.svg'
+import { AuthContext } from './context/AuthContext';
 import {
   collection,
   getDocs,
@@ -23,6 +24,7 @@ import Image from 'next/image';
 
 const Page = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { userCredential } = useContext(AuthContext);
   const router = useRouter();
   
   // State for listings
@@ -95,6 +97,13 @@ const Page = () => {
 
     fetchListings();
   }, []);
+  
+ const handleClick = () => {
+    if (!userCredential) {
+      router.push('/sign-in');
+    } 
+  };
+
 
   // Function to move to the previous slide
   const prevSlide = () => {
@@ -142,12 +151,12 @@ const Page = () => {
               Discover a Place You’ll Love to Live
             </p>
           </div>
-          <div className='flex z-50 max-sm:p-8 md:w-[35%] mx-auto my-auto justify-center items-center mt-7 border-none'>
+          {/* <div className='flex z-50 max-sm:p-8 md:w-[35%] mx-auto my-auto justify-center items-center mt-7 border-none'>
             <input type='text' placeholder='Input Location...' className='h-[4rem] w-full rounded-l-[3rem] outline-none' />
             <button className='flex bg-orange-500 rounded-r-[2rem] text-white py-2 h-[4rem] w-[4rem] justify-center items-center'>
               <CiSearch size={30} />
             </button>
-          </div>
+          </div> */}
         </div>
 
         <div className='max-sm:hidden'>
@@ -179,7 +188,7 @@ const Page = () => {
       <div className="max-w-6xl mx-auto pt-4 space-y-6">
         {/* Offer Listings */}
         {offerListings && offerListings.length > 0 && (
-          <div className="m-2 mb-6">
+          <div onClick={handleClick} className="m-2 mb-6">
             <h2 className="px-3 text-2xl mt-6 font-semibold">Recent offers</h2>
             <Link href="/offers">
               <p className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out">
@@ -200,14 +209,14 @@ const Page = () => {
 
         {/* Rent Listings */}
         {rentListings && rentListings.length > 0 && (
-          <div className="m-2 mb-6">
+          <div onClick={handleClick} className="m-2 mb-6">
             <h2 className="px-3 text-2xl mt-6 font-semibold">Places for rent</h2>
             <Link href="/category/rent">
               <p className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out">
                 Show more places for rent
               </p>
             </Link>
-            <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ul onClick={handleClick} className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {rentListings.map((listing) => (
                 <ListingItem
                   key={listing.id}
@@ -221,14 +230,14 @@ const Page = () => {
 
         {/* Sale Listings */}
         {saleListings && saleListings.length > 0 && (
-          <div className="m-2 mb-6">
+          <div onClick={handleClick} className="m-2 mb-6">
             <h2 className="px-3 text-2xl mt-6 font-semibold">Places for sale</h2>
             <Link href="/category/sale">
               <p className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out">
                 Show more places for sale
               </p>
             </Link>
-            <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ul onClick={handleClick} className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {saleListings.map((listing) => (
                 <ListingItem
                   key={listing.id}
@@ -251,7 +260,7 @@ const Page = () => {
     <p className="mt-2 text-gray-700">
       With over 1 million+ homes for sale available on the website, BuildGrain can match you with a house you will want to call home.
     </p>
-    <button className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-150">
+    <button onClick={handleClick} className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-150">
       <Link href="/category/sale">
         Find A Home
       </Link>
@@ -266,7 +275,7 @@ const Page = () => {
     <p className="mt-2 text-gray-700">
       With over 1 million+ rental listings available on our website, BuildGrain can help you find the perfect house to rent.
     </p>
-    <button className="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-150">
+    <button onClick={handleClick} className="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-150">
       <Link href="/category/rent">
         Find A Rental
       </Link>
@@ -280,7 +289,7 @@ const Page = () => {
     <p className="mt-2 text-gray-700">
       With over 1 million+ potential buyers visiting our website, BuildGrain can help you sell your house quickly and efficiently. 
     </p>
-    <button className="mt-4 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-150">
+    <button onClick={handleClick} className="mt-4 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-150">
       <Link href="/profile">
         Sell A Home
       </Link>

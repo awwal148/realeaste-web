@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import L from "leaflet";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { db } from "@/app/config/firebase";
@@ -12,6 +12,7 @@ import "swiper/css/pagination";
 import "swiper/css/bundle";
 import "leaflet/dist/leaflet.css";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { AuthContext } from "@/app/context/AuthContext";
 import { EffectFade, Autoplay, Navigation, Pagination } from 'swiper/modules';
 
 import markerIcon from "leaflet/dist/images/marker-icon.png";
@@ -40,6 +41,7 @@ const Page = ({ params }) => {
   const router = useRouter();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { userCredential } = useContext(AuthContext);
   const [shareLinkCopied, setShareLinkCopied] = useState(false);
   const [contactLandlord, setContactLandlord] = useState(false);
 
@@ -68,6 +70,10 @@ const Page = ({ params }) => {
     }
     fetchListing();
   }, [id, router]);
+
+  if (!userCredential) {
+      router.push('/sign-in');
+    } 
 
   if (loading || !listing) {
     return <div>Loading...</div>;

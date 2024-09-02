@@ -1,5 +1,8 @@
 'use client'
 import { useEffect, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
+import { useRouter } from "next/navigation";
 // import { toast } from "react-toastify";
 import {
   collection,
@@ -17,7 +20,9 @@ import { async } from "@firebase/util";
 
 export default function Offers() {
   const [listings, setListings] = useState(null);
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const { userCredential } = useContext(AuthContext);
   const [lastFetchedListing, setLastFetchListing] = useState(null);
   useEffect(() => {
     async function fetchListings() {
@@ -49,6 +54,7 @@ export default function Offers() {
     fetchListings();
   }, []);
 
+   
   async function onFetchMoreListings() {
     try {
       const listingRef = collection(db, "listings");
@@ -76,6 +82,12 @@ export default function Offers() {
     }
   }
 
+  const handleClick = () => {
+    if (!userCredential) {
+      router.push('/sign-in');
+    } 
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-3">
       <h1 className="text-3xl text-center mt-6 font-bold mb-6">Offers</h1>
@@ -84,8 +96,8 @@ export default function Offers() {
         <p></p>
       ) : listings && listings.length > 0 ? (
         <>
-          <main>
-            <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+          <main onClick={handleClick}>
+            <ul onClick={handleClick} className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {listings.map((listing) => (
                 <ListingItem
                   key={listing.id}
