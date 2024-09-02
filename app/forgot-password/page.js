@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import houseKeys from '../assets/images/house-Keys.jpg'
+import houseKeys from '../assets/images/house-keys.jpg'
 
 const SignUp = () => {
    const [email, setEmail] = useState("");

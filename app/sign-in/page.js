@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
-import houseKeys from '../assets/images/house-Keys.jpg'
+import houseKeys from '../assets/images/house-keys.jpg'
 import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai'
 import { OAuth } from '../components/OAuth'
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
