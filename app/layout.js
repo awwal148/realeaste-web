@@ -3,6 +3,7 @@ import "./globals.css";
 import { Header } from "./components/Header";
 import { AuthProvider } from "./context/AuthContext";
 import "leaflet/dist/leaflet.css";
+import Footer from "./components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
         {children}
         </AuthProvider>
+        <Footer />
         </body>
     </html>
   );

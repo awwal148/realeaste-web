@@ -235,7 +235,7 @@ const Page = () => {
     await updateDoc(docRef, formDataCopy);
     setLoading(false);
     alert("Listing updated");
-    router.push(`/listing/${listing.type}/${id}`);
+   router.push(`/listing/${formData.type}/${id}`);
   }
 
   return (

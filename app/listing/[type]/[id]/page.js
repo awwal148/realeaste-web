@@ -185,7 +185,7 @@ console.log("Contact Landlord:", contactLandlord);
             <Contact userRef={listing.userRef} listing={listing} />
           )}
         </div>
-        
+
         {/* Map Container */}
         <div className="w-full h-[200px] md:h-[400px] z-10 overflow-x-hidden mt-6 md:mt-0 md:ml-2">
           {listing.geolocation && listing.geolocation.lat !== 0 && listing.geolocation.lng !== 0 ? (

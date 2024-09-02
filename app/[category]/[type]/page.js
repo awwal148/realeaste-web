@@ -1,6 +1,6 @@
-'use client'
+'use client';
 import { useEffect, useState } from "react";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import {
   collection,
   getDocs,
@@ -10,22 +10,27 @@ import {
   startAfter,
   where,
 } from "firebase/firestore";
-import { db } from "../config/firebase";
-// import Spinner from "../components/Spinner";
-import ListingItem from "../components/ListingItem";
-import { async } from "@firebase/util";
+import { db } from "../../config/firebase";
+import ListingItem from "../../components/ListingItem";
+import { useRouter } from 'next/navigation';
 
-export default function Offers() {
+const Page = ({ params }) => {
+  console.log('link', params);  // Check the structure of params
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastFetchedListing, setLastFetchListing] = useState(null);
+  const router = useRouter();
+  const { type: categoryName } = params;  // Use the correct destructuring
+
   useEffect(() => {
     async function fetchListings() {
+      if (!categoryName) return;
+
       try {
         const listingRef = collection(db, "listings");
         const q = query(
           listingRef,
-          where("offer", "==", true),
+          where("type", "==", categoryName),
           orderBy("timestamp", "desc"),
           limit(8)
         );
@@ -42,19 +47,19 @@ export default function Offers() {
         setListings(listings);
         setLoading(false);
       } catch (error) {
-        toast.error("Could not fetch listing");
+        alert("Listing not loading!");
       }
     }
 
     fetchListings();
-  }, []);
+  }, [categoryName]);
 
   async function onFetchMoreListings() {
     try {
       const listingRef = collection(db, "listings");
       const q = query(
         listingRef,
-        where("offer", "==", true),
+        where("type", "==", categoryName),
         orderBy("timestamp", "desc"),
         startAfter(lastFetchedListing),
         limit(4)
@@ -69,18 +74,19 @@ export default function Offers() {
           data: doc.data(),
         });
       });
-      setListings((prevState)=>[...prevState, ...listings]);
+      setListings((prevState) => [...prevState, ...listings]);
       setLoading(false);
     } catch (error) {
-      toast.error("Could not fetch listing");
+      toast.error("Could not fetch listings");
     }
   }
 
   return (
     <div className="max-w-6xl mx-auto px-3">
-      <h1 className="text-3xl text-center mt-6 font-bold mb-6">Offers</h1>
+      <h1 className="text-3xl text-center mt-6 font-bold mb-6">
+        {categoryName === "rent" ? "Places for rent" : "Places for sale"}
+      </h1>
       {loading ? (
-        // <Spinner />
         <p></p>
       ) : listings && listings.length > 0 ? (
         <>
@@ -107,8 +113,15 @@ export default function Offers() {
           )}
         </>
       ) : (
-        <p>There are no current offers</p>
+        <p>
+          There are no current{" "}
+          {categoryName === "rent"
+            ? "places for rent"
+            : "places for sale"}
+        </p>
       )}
     </div>
   );
 }
+
+export default Page;

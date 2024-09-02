@@ -81,15 +81,25 @@ import ListingItem from "../components/ListingItem";
       // toast.error("Could not update the profile details");
     }
   }
+
+const ADMIN_EMAIL = "adesanyaadedotun3@gmail.com";
   //note
   useEffect(() => {
     async function fetchUserListings() {
-      const listingRef = collection(db, "listings");
-      const q = query(
-        listingRef,
-        where("userRef", "==", auth.currentUser?.uid),
-        orderBy("timestamp", "desc")
-      );
+      
+        let q;
+        
+        if (auth.currentUser?.email === ADMIN_EMAIL) {
+          // If the user is admin, fetch all listings
+          q = query(collection(db, "listings"), orderBy("timestamp", "desc"));
+        } else {
+          // Fetch listings for the current user only
+          q = query(
+            collection(db, "listings"),
+              where("userRef", "==", auth.currentUser?.uid),
+            orderBy("timestamp", "desc")
+          );
+        }
       const querySnap = await getDocs(q);
       let listings = [];
       querySnap.forEach((doc) => {
@@ -103,6 +113,52 @@ import ListingItem from "../components/ListingItem";
     }
     fetchUserListings();
   }, [auth.currentUser?.uid]);
+
+
+
+  /////NOTEEEEE
+//  useEffect(() => {
+//     async function fetchUserListings() {
+//       try {
+//         const user = auth.currentUser;
+//         let q;
+        
+//         if (user.email === ADMIN_EMAIL) {
+//           // If the user is admin, fetch all listings
+//           q = query(collection(db, "listings"), orderBy("timestamp", "desc"));
+//         } else {
+//           // Fetch listings for the current user only
+//           q = query(
+//             collection(db, "listings"),
+//             where("userRef", "==", user.uid),
+//             orderBy("timestamp", "desc")
+//           );
+//         }
+
+//         const querySnap = await getDocs(q);
+//         let listings = [];
+//         querySnap.forEach((doc) => {
+//           listings.push({
+//             id: doc.id,
+//             data: doc.data(),
+//           });
+//         });
+
+//         setListings(listings);
+//         setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching listings: ", error);
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   fetchUserListings();
+  // }, [auth.currentUser]);
+
+
+
+
+
   async function onDelete(listingID) {
     if (window.confirm("Are you sure you want to delete?")) {
       await deleteDoc(doc(db, "listings", listingID));
